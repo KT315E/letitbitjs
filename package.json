@@ -1,0 +1,38 @@
+{
+  "name": "letitbitjs",
+  "version": "0.0.0",
+  "description": "Helper for letitbit.net, vip-file.com, shareflare.net",
+  "main": "userjs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ReklatsMasters/letitbitjs.git"
+  },
+  "keywords": [
+    "deposit",
+    "letitbit",
+    "userjs",
+    "vip-file",
+    "shareflare"
+  ],
+  "author": "ReklatsMasters",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ReklatsMasters/letitbitjs/issues"
+  },
+  "homepage": "https://github.com/ReklatsMasters/letitbitjs",
+  "devDependencies": {
+    "browserify": "^8",
+    "del": "^1.1.1",
+    "gulp": "^3",
+    "gulp-header": "^1.2.2",
+    "gulp-uglify": "^1.1.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1"
+  },
+  "dependencies": {
+    "spark-md5": "0.0.5"
+  }
+}
