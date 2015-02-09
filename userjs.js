@@ -36,6 +36,27 @@ function createPostData(url) {
 	}).join("&");
 }
 
+function draw(url){
+	// создаём кнопку-скачалку
+	var a = document.createElement("a");
+	a.href = url;
+	a.className = "highlight-s";
+	a.textContent = "download";
+	a.style.textTransform = "uppercase";
+	a.style.font = "400 20px/2 Tahoma, Arial, sans-serif";
+	a.style.display = "block";
+	a.target = "_blank";
+
+	var before = document.getElementById("page-content-wrapper");
+	before.parentNode.insertBefore(a, before);
+
+	// создаём кнопку-попрошайку
+	var donate = '<iframe frameborder="0" allowtransparency="true" scrolling="no" src="https://money.yandex.ru/embed/small.xml?account=41001781731116&quickpay=small&any-card-payment-type=on&button-text=06&button-size=m&button-color=black&targets=UserJS&default-sum=50&successURL=" width="212" height="42"></iframe>';
+	var domparser = new DOMParser();
+
+	var donateDocument = domparser.parseFromString(donate, "text/html");
+	before.parentNode.insertBefore(donateDocument.body.firstChild, before);
+}
 
 function main() {
 	/* jshint -W064 */
@@ -52,7 +73,7 @@ function main() {
 			var data = xhr.responseText.split('\n');
 
 			if ( data[0].toLowerCase() == "ok" ) {
-				console.log( data[2] );
+				draw( data[2] );
 			} else {
 				console.log( 'что-то пошло не так...', data );
 			}
