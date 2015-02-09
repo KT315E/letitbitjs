@@ -45,7 +45,8 @@ function main() {
 		url: "http://api.letitbit.net/internal/index4.php",
 		data: createPostData( document.getElementById('link_for_downloader').value ),
 		headers: {
-			"Content-Type": "application/x-www-form-urlencoded"
+			"Content-Type": "application/x-www-form-urlencoded",
+			"User-Agent": ""
 		},
 		onload: function(xhr) {
 			var data = xhr.responseText.split('\n');
