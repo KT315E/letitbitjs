@@ -47,7 +47,7 @@ function draw(url){
 	a.style.display = "block";
 	a.target = "_blank";
 
-	var before = document.getElementById("page-content-wrapper");
+	var before = document.getElementById("page-content").firstChild;
 	before.parentNode.insertBefore(a, before);
 
 	// создаём кнопку-попрошайку
@@ -58,13 +58,23 @@ function draw(url){
 	before.parentNode.insertBefore(donateDocument.body.firstChild, before);
 }
 
+function getLink() {
+	var sky = document.getElementById('link_for_downloader');
+
+	if (sky) {
+		return sky.value;
+	} else {
+		return location.href;
+	}
+}
+
 function main() {
 	/* jshint -W064 */
 
 	GM_xmlhttpRequest({
 		method: "POST",
 		url: "http://api.letitbit.net/internal/index4.php",
-		data: createPostData( document.getElementById('link_for_downloader').value ),
+		data: createPostData( getLink() ),
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded",
 			"User-Agent": ""
