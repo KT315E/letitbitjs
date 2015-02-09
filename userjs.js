@@ -1,45 +1,66 @@
-// ==UserScript==
-// @name           Letitbit Master
-// @description    Helper for letitbit.net
-// @version        1.1.2
-// @date           2013-06-17
-// @author         ReklatsMasters
-// @homepageURL    https://github.com/ReklatsMasters/letitbitjs
-// @updateURL      https://raw.github.com/ReklatsMasters/letitbitjs/master/userjs.js
-// @require        http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @include        http://letitbit.net/download*
-// @include        http://*.letitbit.net/download*
-// @icon           http://images.letitbit.net/favicon.ico
-// ==/UserScript==
+'use strict';
 
-(function(window){
-	
-	function main () {
-		// удаляем фон
-		document.body.className = '';
+/* global GM_xmlhttpRequest */
 
-		if (location.pathname != '/download3.php') {
-			// удаляем ссылки на рекламу
-			var content = document.getElementsByClassName('page-content')[0];
-			content.removeChild(content.lastChild);
-			content.removeChild(content.lastChild);
-			content.removeChild(content.lastChild);
+var md5 = require('./lib/md5');
 
-			var unpack_detect = setInterval(function() {
-				var free = $('#ifree_form')
-					, ifree = free.find("input[type=hidden]")
-					, count_inputs = ifree.length
-				;
+/* подпись запроса */
+function sign(url, appid) {
+	var scope = [];
 
-				if (count_inputs < 50) {
-					clearInterval(unpack_detect);
-					ifree.filter('[name=is_skymonk]').val('1');
-					free.attr('action', '/download3.php').submit();
-				}
+	scope.push('kAY54boSH+'); 	// salt 1
+	scope.push( url.split('/').slice(0, -1).join('/') + "/" );
+	scope.push(appid);					//appid
+	scope.push(50);							// sp
+	scope.push('gUnS60oleO^'); // salt 2
 
-			}, 100);
+	return md5(md5( scope.join("|") ));
+}
+
+/* формирует строку запроса к АПИ */
+function createPostData(url) {
+	var appid = md5(Math.random().toString());
+
+	var apiqs = {
+		action: "LINK_GET_DIRECT",
+		link: url,
+		appid: appid,
+		version: 3,
+		free_link: 1,
+		sh: sign(url, appid),
+		sp: 50
+	};
+
+	return Object.keys(apiqs).map(function(key){
+		return key + "=" + apiqs[key];
+	}).join("&");
+}
+
+
+function main() {
+	/* jshint -W064 */
+
+	GM_xmlhttpRequest({
+		method: "POST",
+		url: "http://api.letitbit.net/internal/index4.php",
+		data: createPostData( document.getElementById('link_for_downloader').value ),
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded"
+		},
+		onload: function(xhr) {
+			var data = xhr.responseText.split('\n');
+
+			if ( data[0].toLowerCase() == "ok" ) {
+				console.log( data[2] );
+			} else {
+				console.log( 'что-то пошло не так...', data );
+			}
+		},
+		onerror: function() {
+			console.error('error');
 		}
-	}
+	});
+}
 
-    window.addEventListener('DOMContentLoaded', main, false);
-})(window);
+window.addEventListener('DOMContentLoaded', main, false);
+window.prompt = null;
