@@ -1,6 +1,6 @@
 {
   "name": "letitbitjs",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Helper for letitbit.net, vip-file.com, shareflare.net",
   "main": "userjs.js",
   "scripts": {
